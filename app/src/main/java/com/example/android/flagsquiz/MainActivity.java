@@ -3,8 +3,10 @@ package com.example.android.flagsquiz;
 import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.Random;
 
@@ -16,7 +18,11 @@ public class MainActivity extends AppCompatActivity {
     Button answer3;
     Button answer4;
     String[][]answers;
+    TextView pointDisplay;
+    int points;
+    int selectedAnswer;
     int[] images;
+    boolean[][] correctAnswers;
     int currQuestionID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,13 +33,25 @@ public class MainActivity extends AppCompatActivity {
         answer2 = (Button)findViewById(R.id.answer2);
         answer3 = (Button)findViewById(R.id.answer3);
         answer4 = (Button)findViewById(R.id.answer4);
+        pointDisplay = (TextView)findViewById(R.id.Points);
+        answer1.setOnClickListener(answer1Click);
+        answer2.setOnClickListener(answer2Click);
+        answer3.setOnClickListener(answer3Click);
+        answer4.setOnClickListener(answer4Click);
         answers = new String[][]{
                 {"Germany", "Poland", "Ukraine", "France"},
                 {"Ukraine", "France", "Germany", "Poland"},
                 {"Poland", "Ukraine", "Germany", "France"}
         };
+        correctAnswers = new boolean[][]{
+                {true, false, false, false},
+                {false, false, false, true},
+                {false, true, false, false}
+        };
         images = new int[]{R.drawable.germany, R.drawable.poland, R.drawable.ukraine};
-        setQuestion(1);
+        currQuestionID = 1;
+        points = 0;
+        setQuestion(currQuestionID);
     }
     public void setQuestion(int questionID)
     {
@@ -42,5 +60,43 @@ public class MainActivity extends AppCompatActivity {
         answer3.setText(answers[questionID-1][2]);
         answer4.setText(answers[questionID-1][3]);
         flagImage.setImageResource(images[questionID-1]);
+    }
+
+    private View.OnClickListener answer1Click = new View.OnClickListener() {
+        public void onClick(View v) {
+            selectedAnswer = 1;
+            updatePoints(checkAnswer(selectedAnswer));
+        }
+    };
+    private View.OnClickListener answer2Click = new View.OnClickListener() {
+        public void onClick(View v) {
+            selectedAnswer = 2;
+            updatePoints(checkAnswer(selectedAnswer));
+        }
+    };
+    private View.OnClickListener answer3Click = new View.OnClickListener() {
+        public void onClick(View v) {
+            selectedAnswer = 3;
+            updatePoints(checkAnswer(selectedAnswer));
+        }
+    };
+    private View.OnClickListener answer4Click = new View.OnClickListener() {
+        public void onClick(View v) {
+            selectedAnswer = 4;
+            updatePoints(checkAnswer(selectedAnswer));
+        }
+    };
+    private boolean checkAnswer(int answerID){
+        return correctAnswers[currQuestionID-1][answerID-1];
+    }
+    private void updatePoints(boolean questionResult){
+        if (questionResult)
+            points++;
+        pointDisplay.setText("Score : " + points);
+        if(currQuestionID != 3)
+            currQuestionID++;
+        else
+            currQuestionID = 1;
+        setQuestion(currQuestionID);
     }
 }
