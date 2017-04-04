@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     int points;
     int selectedAnswer;
     int[] images;
-    boolean[][] correctAnswers;
+    int[] correctAnswers;
     int currQuestionID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 {"Ukraine", "France", "Germany", "Poland"},
                 {"Poland", "Ukraine", "Germany", "France"}
         };
-        correctAnswers = new boolean[][]{
-                {true, false, false, false},
-                {false, false, false, true},
-                {false, true, false, false}
-        };
+        correctAnswers = new int[]{ 1, 4, 2};
         images = new int[]{R.drawable.germany, R.drawable.poland, R.drawable.ukraine};
         currQuestionID = 1;
         points = 0;
@@ -87,7 +83,9 @@ public class MainActivity extends AppCompatActivity {
         }
     };
     private boolean checkAnswer(int answerID){
-        return correctAnswers[currQuestionID-1][answerID-1];
+        if(answerID == correctAnswers[currQuestionID-1])
+            return true;
+        return false;
     }
     private void updatePoints(boolean questionResult){
         if (questionResult)
